@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import SearchBar from "@/src/components/SearchBar"; // SearchBar import 추가
 
 const TABS = [
   { slug: "season",  label: "🌟 시즌템" },
@@ -27,33 +28,44 @@ export default function Header() {
   return (
     <header className={`sticky top-0 z-40 border-b ${scrolling ? "backdrop-blur-sm bg-white/85" : "bg-white/90"}`}>
       <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="text-2xl">💛</span>
-          <span className="font-bold text-2xl">HolyTem</span>
-        </Link>
+        <div className="flex w-full items-center justify-between gap-3">
+          {/* 좌측 로고/네비 */}
+          <div className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-2">
+              <span className="text-2xl">💛</span>
+              <span className="font-bold text-2xl">HolyTem</span>
+            </Link>
 
-        {/* 데스크톱 탭 */}
-        <nav className="hidden md:flex items-center gap-5">
-          {TABS.map(t => {
-            const on = active === t.slug;
-            return (
-              <Link key={t.slug}
-                href={`/t/${t.slug}`}
+            {/* 데스크톱 탭 */}
+            <nav className="hidden md:flex items-center gap-5">
+              {TABS.map(t => {
+                const on = active === t.slug;
+                return (
+                  <Link key={t.slug}
+                    href={`/t/${t.slug}`}
+                    className={`inline-flex items-center gap-1 font-semibold text-[18px] px-1.5 pb-2 border-b-2
+                      ${on ? "text-brand.brown border-brand.gold bg-[#FFF8E1] rounded-t"
+                           : "text-gray-800 border-transparent hover:text-brand.brown hover:border-brand.gold"}`}
+                  >
+                    {t.label}
+                  </Link>
+                );
+              })}
+              <Link href="/collections"
                 className={`inline-flex items-center gap-1 font-semibold text-[18px] px-1.5 pb-2 border-b-2
-                  ${on ? "text-brand.brown border-brand.gold bg-[#FFF8E1] rounded-t"
-                       : "text-gray-800 border-transparent hover:text-brand.brown hover:border-brand.gold"}`}
-              >
-                {t.label}
+                  ${pathname?.startsWith("/collections") ? "text-brand.brown border-brand.gold bg-[#FFF8E1] rounded-t"
+                  : "text-gray-800 border-transparent hover:text-brand.brown hover:border-brand.gold"}`}>
+                🗂️ 컬렉션
               </Link>
-            );
-          })}
-          <Link href="/collections"
-            className={`inline-flex items-center gap-1 font-semibold text-[18px] px-1.5 pb-2 border-b-2
-              ${pathname?.startsWith("/collections") ? "text-brand.brown border-brand.gold bg-[#FFF8E1] rounded-t"
-              : "text-gray-800 border-transparent hover:text-brand.brown hover:border-brand.gold"}`}>
-            🗂️ 컬렉션
-          </Link>
-        </nav>
+            </nav>
+          </div>
+
+          {/* 가운데 검색 */}
+          <SearchBar />
+
+          {/* 우측 액션 */}
+          <div className="flex items-center gap-2">{/* ... */}</div>
+        </div>
       </div>
 
       {/* 모바일 가로 스크롤 + 페이드 힌트 */}

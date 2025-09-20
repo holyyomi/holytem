@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import { supabaseClient } from "@/lib/supabase.client";
-import { Product } from '@/lib/server-products'; // Product 타입을 server-products에서 가져옵니다.
+import { Product } from "@/lib/server-products"; // Product 타입을 server-products에서 가져옵니다.
 
 type Promo = {
   id: number;
@@ -15,11 +15,11 @@ type Promo = {
 type Setting = { key: string; value: string };
 
 const CATEGORIES = [
-  { slug: "season",  name: "🌟 시즌템" },
+  { slug: "season", name: "🌟 시즌템" },
   { slug: "parents", name: "❤️ 효도템" },
-  { slug: "kids",    name: "🧸 키즈템" },
-  { slug: "pets",    name: "🐾 댕냥템" },
-  { slug: "gadget",  name: "✨ 신기템" },
+  { slug: "kids", name: "🧸 키즈템" },
+  { slug: "pets", name: "🐾 댕냥템" },
+  { slug: "gadget", name: "✨ 신기템" },
 ];
 
 export default function HomePage() {
@@ -60,6 +60,19 @@ export default function HomePage() {
         </h1>
         <p className="mt-3 text-zinc-600">{heroSub}</p>
       </section>
+
+      {/* 추천 검색어 */}
+      <div className="mt-2 flex flex-wrap justify-center gap-2 text-sm text-zinc-500">
+        {["생일", "부모님", "퇴사", "집들이"].map((k) => (
+          <Link
+            key={k}
+            href={`/search?q=${encodeURIComponent(k)}&sort=priority&page=1`}
+            className="hover:text-zinc-700 underline-offset-4 hover:underline"
+          >
+            #{k}
+          </Link>
+        ))}
+      </div>
 
       {/* 카테고리 칩 */}
       <section className="mx-auto max-w-6xl">
