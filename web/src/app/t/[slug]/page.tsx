@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 const PAGE_SIZE = 18;
 
-export default async function CategoryPage({ params, searchParams }: \
+export default async function CategoryPage({ params, searchParams }:
  { params: { slug: string }, searchParams: { page?: string, sort?: string }}) {
   const page = Number(searchParams.page || 1);
   const from = (page - 1) * PAGE_SIZE;
