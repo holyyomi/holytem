@@ -28,21 +28,17 @@ export default async function CategoryPage({ params, searchParams }: Props) {
         </div>
       ) : (
         <>
-          <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {items.map((p) => (
               <li key={p.id}>
-                <ProductCard id={p.id}
-                  title={p.title}
-                  image_url={p.image_url ?? undefined}
-                  short_copy={p.short_copy ?? undefined}
-                  partner_url={p.partner_url ?? undefined}
-                  href={`/p/${p.id}`} // 상세 페이지 준비되면 연결
-                />
+                <ProductCard product={p} />
               </li>
             ))}
           </ul>
 
-          <Pagination total={total} page={page} pageSize={pageSize} />
+          <div className="mt-10 flex justify-center gap-2">
+            <Pagination total={total} page={page} pageSize={pageSize} />
+          </div>
         </>
       )}
     </main>

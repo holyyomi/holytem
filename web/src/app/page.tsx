@@ -4,18 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import { supabaseClient } from "@/lib/supabase.client";
+import { Product } from '@/lib/server-products'; // Product 타입을 server-products에서 가져옵니다.
 
-type Product = {
-  id: number;
-  title: string;
-  image_url: string | null;
-  short_copy: string | null;
-  category_id: number;
-  is_best: boolean | null;
-  priority: number | null;
-  created_at: string;
-};
-type Category = { id: number; slug: string; name: string };
 type Promo = {
   id: number;
   title: string;
@@ -23,6 +13,14 @@ type Promo = {
   link_url: string | null;
 };
 type Setting = { key: string; value: string };
+
+const CATEGORIES = [
+  { slug: "season",  name: "🌟 시즌템" },
+  { slug: "parents", name: "❤️ 효도템" },
+  { slug: "kids",    name: "🧸 키즈템" },
+  { slug: "pets",    name: "🐾 댕냥템" },
+  { slug: "gadget",  name: "✨ 신기템" },
+];
 
 export default function HomePage() {
   const [featured, setFeatured] = useState<Product[]>([]);
@@ -54,79 +52,67 @@ export default function HomePage() {
     "물어볼 필요 없이, 상황·대상별로 딱 맞는 선물만 골라드립니다.";
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 py-10">
       {/* 히어로 */}
-      <section className="text-center pt-8 pb-4">
-        <h1 className="text-3xl md:text-4xl font-extrabold text-brand.brown">
+      <section className="text-center py-10">
+        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
           {heroTitle}
         </h1>
-        <p className="mt-3 text-[17px] text-neutral-44">{heroSub}</p>
+        <p className="mt-3 text-zinc-600">{heroSub}</p>
       </section>
 
-      {/* 상황 칩 */}
+      {/* 카테고리 칩 */}
       <section className="mx-auto max-w-6xl">
         <div className="flex flex-wrap gap-2">
-          {[
-            "#부모님",
-            "#연인",
-            "#아이",
-            "#반려가족",
-            "#집들이",
-            "#퇴사/입사",
-            "#장거리운전",
-          ].map((s, i) => (
+          {CATEGORIES.map((c) => (
             <Link
-              key={i}
-              href="/collections"
-              className="rounded-full border px-4 py-2 bg-white hover:shadow-sm"
+              key={c.slug}
+              href={`/c/${c.slug}`}
+              className="inline-flex items-center rounded-full border border-zinc-200 bg-white px-3 py-1
+                 text-sm text-zinc-700 hover:border-zinc-300 hover:bg-zinc-50 transition"
             >
-              {s}
+              {c.name}
             </Link>
           ))}
         </div>
       </section>
 
-      {/* 대표 5개 */}
-      <section className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        {featured.map((p) => (
-          <ProductCard
-            key={p.id}
-            id={p.id}
-            title={p.title}
-            image_url={p.image_url}
-            short_copy={p.short_copy}
-            is_best={p.is_best || false}
-            created_at={p.created_at}
-          />
-        ))}
+      {/* 추천 선물 */}
+      <section className="mt-8">
+        <h2 className="text-lg font-semibold">추천 선물</h2>
+        <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {featured.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
+        </div>
       </section>
 
       {/* 프로모션 */}
-      <section>
-        <h2 className="text-xl font-semibold mb-3">프로모션</h2>
-        {promos.length ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <section className="mt-12">
+        <h2 className="text-lg font-semibold">프로모션</h2>
+        {promos.length === 0 ? (
+          <div className="mt-4 flex h-40 items-center justify-center rounded-lg border border-dashed text-zinc-400">
+            프로모션 카드가 없습니다.
+          </div>
+        ) : (
+          <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {promos.map((pr) => (
               <a
                 key={pr.id}
                 href={pr.link_url || "#"}
                 target="_blank"
                 rel="noopener sponsored"
-                className="block border rounded-2xl overflow-hidden bg-white"
+                className="block rounded-2xl border bg-white/70 backdrop-blur transition hover:shadow-md"
               >
                 <img
                   src={pr.image_url || "/placeholder.jpg"}
                   alt={pr.title}
-                  className="w-full h-[140px] object-cover"
+                  className="h-auto w-full aspect-[3/2] object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                 />
                 <div className="p-3 font-semibold">{pr.title}</div>
               </a>
             ))}
-          </div>
-        ) : (
-          <div className="h-[140px] border rounded-2xl flex items-center justify-center text-gray-500 bg-white">
-            프로모션 카드가 없습니다.
-          </div>
+          </ul>
         )}
       </section>
     </div>

@@ -11,3 +11,8 @@ a, button { outline-offset: 3px; }
 /* 유틸 (line-clamp 플러그인 없이도 어느정도 동작하도록) */
 .clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
 .clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+:root{ --brand:#111; --muted:#71717a; }
+h1,h2,h3{ letter-spacing:-0.02em; }
+a { text-decoration: none }
+a:hover { text-decoration: none }

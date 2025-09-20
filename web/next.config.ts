@@ -16,6 +16,8 @@ const nextConfig: NextConfig = {
         : []),
       // 필요하면 추가 도메인 여기 더 넣기
       // { protocol: 'https', hostname: 'images.unsplash.com', pathname: '/**' },
+      { protocol: 'https', hostname: 'images.unsplash.com', pathname: '/**' },
+      { protocol: 'https', hostname: 'lh3.googleusercontent.com', pathname: '/**' },
     ],
   },
 };
