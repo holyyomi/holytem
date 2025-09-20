@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo",
-    "build": "next build --turbo",
+    "dev": "next dev --turbopack",
+    "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "gen-types": "supabase gen types typescript --project-id YOUR_SUPABASE_PROJECT_REF --schema public > src/lib/database.types.ts"
+    "gen-types": "npx supabase@latest gen types typescript --project-id qovpfityodahneheolzt --schema public > src/lib/database.types.ts"
   },
   "dependencies": {
     "react": "19.1.0",
