@@ -7,7 +7,12 @@ import { supabaseClient } from "@/lib/supabase.client";
 /** ===== Types ===== */
 // The types for Product and Category will now be inferred from the Supabase Database type.
 
-type Promo = { id:number; title:string; image_url:string|null; link_url:string|null; };
+type Promo = {
+  id: number;
+  title: string;
+  image_url: string | null;
+  link_url: string | null;
+};
 
 /** ===== Page (Client Component) ===== */
 export default function HomePage() {
@@ -46,7 +51,12 @@ export default function HomePage() {
           let message = "데이터를 불러오지 못했습니다.";
           if (err instanceof Error) {
             message = err.message;
-          } else if (typeof err === "object" && err !== null && "message" in err && typeof (err as { message: unknown }).message === "string") {
+          } else if (
+            typeof err === "object" &&
+            err !== null &&
+            "message" in err &&
+            typeof (err as { message: unknown }).message === "string"
+          ) {
             message = (err as { message: string }).message;
           }
           setErrorMsg(message);
@@ -66,7 +76,9 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
-    fetch('/api/promos').then(r=>r.json()).then(setPromos);
+    fetch("/api/promos")
+      .then((r) => r.json())
+      .then(setPromos);
   }, []);
 
   /** ===== UI Rendering ===== */
@@ -152,9 +164,17 @@ export default function HomePage() {
         <h2 className="text-xl font-semibold mb-3">프로모션</h2>
         {promos.length ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {promos.map(pr => (
-              <a key={pr.id} href={pr.link_url||'#'} className="block border rounded-xl overflow-hidden">
-                <img src={pr.image_url||'/placeholder.jpg'} alt={pr.title} className="w-full h-36 object-cover"/>
+            {promos.map((pr) => (
+              <a
+                key={pr.id}
+                href={pr.link_url || "#"}
+                className="block border rounded-xl overflow-hidden"
+              >
+                <img
+                  src={pr.image_url || "/placeholder.jpg"}
+                  alt={pr.title}
+                  className="w-full h-36 object-cover"
+                />
                 <div className="p-3 font-semibold">{pr.title}</div>
               </a>
             ))}
