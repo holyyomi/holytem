@@ -7,12 +7,15 @@ import { supabaseClient } from "@/lib/supabase.client";
 /** ===== Types ===== */
 // The types for Product and Category will now be inferred from the Supabase Database type.
 
+type Promo = { id:number; title:string; image_url:string|null; link_url:string|null; };
+
 /** ===== Page (Client Component) ===== */
 export default function HomePage() {
   const [categories, setCategories] = useState<any[]>([]);
   const [featured, setFeatured] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [promos, setPromos] = useState<Promo[]>([]);
 
   useEffect(() => {
     let mounted = true;
@@ -38,7 +41,7 @@ export default function HomePage() {
 
         if (featErr) throw featErr;
         if (mounted) setFeatured(featData ?? []); // Removed explicit type cast
-      } catch (err: unknown) { // Changed 'any' to 'unknown'
+      } catch (err: unknown) {
         if (mounted) {
           let message = "데이터를 불러오지 못했습니다.";
           if (err instanceof Error) {
@@ -60,6 +63,10 @@ export default function HomePage() {
     };
     // 의도적으로 최초 1회만
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    fetch('/api/promos').then(r=>r.json()).then(setPromos);
   }, []);
 
   /** ===== UI Rendering ===== */
@@ -142,10 +149,21 @@ export default function HomePage() {
 
       {/* Promotion placeholder */}
       <section>
-        <h2 className="mb-3 text-xl font-semibold">프로모션</h2>
-        <div className="flex h-36 items-center justify-center rounded-xl border text-gray-500">
-          프로모션 카드(수동) 자리 · 애드센스 전환 예정
-        </div>
+        <h2 className="text-xl font-semibold mb-3">프로모션</h2>
+        {promos.length ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {promos.map(pr => (
+              <a key={pr.id} href={pr.link_url||'#'} className="block border rounded-xl overflow-hidden">
+                <img src={pr.image_url||'/placeholder.jpg'} alt={pr.title} className="w-full h-36 object-cover"/>
+                <div className="p-3 font-semibold">{pr.title}</div>
+              </a>
+            ))}
+          </div>
+        ) : (
+          <div className="h-36 border rounded-xl flex items-center justify-center text-gray-500">
+            프로모션 카드가 없습니다.
+          </div>
+        )}
       </section>
     </main>
   );
